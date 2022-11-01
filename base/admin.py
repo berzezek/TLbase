@@ -45,7 +45,7 @@ class CategoryAdmin(admin.ModelAdmin):
                 reverse('admin:base_category_add') + "?" +
                 urlencode({'category': obj.id})
         )
-        return format_html(f'<a href="{url}">Добавить подкатегорию</a>')
+        return format_html(f'<a href="{url}">Добавить подотдел</a>')
 
     def add_employee(self, obj):
         url = (
@@ -58,7 +58,7 @@ class CategoryAdmin(admin.ModelAdmin):
         url = (
             reverse('admin:base_category_change', args=[ obj.id ])
         )
-        return format_html(f'<a href="{url}" style="color: green">Изменить категорию</a>')
+        return format_html(f'<a href="{url}" style="color: green">Изменить отдел</a>')
 
     def remove_category(self, obj):
         url = (
@@ -71,11 +71,11 @@ class CategoryAdmin(admin.ModelAdmin):
     add_subcategory.short_description = 'Добавить подкатегорию'
     edit_category.short_description = 'Изменить категорию'
     remove_category.short_description = 'Удалить категорию'
-    parent_category.short_description = 'Родительская категория'
+    parent_category.short_description = 'Головной отдел'
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
-        form.base_fields[ "name" ].label = "Наименование категории:"
+        form.base_fields[ "name" ].label = "Наименование отдела:"
         form.base_fields[ "category" ].label = "Головной отдел:"
         return form
 
@@ -115,12 +115,14 @@ class EmployeeAdmin(admin.ModelAdmin):
     remove_employee.short_description = 'Удалить cотрудника'
 
     list_filter = ('category',)
-    search_fields = ('name__startswith',)
+    search_fields = ('name__startswith', 'category__name__startswith')
+    # raw_id_fields = ('category',)
+    ordering = []
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
-        form.base_fields[ "name" ].label = "Наименование категории:"
+        form.base_fields[ "name" ].label = "Ф.И.О.:"
         form.base_fields[ "salary" ].label = "Заработная плата:"
         form.base_fields[ "date_of_issue" ].label = "Дата приказа:"
-        form.base_fields[ "category" ].label = "Отдел:"
+        form.base_fields[ "category" ].label = "Головной отдел:"
         return form

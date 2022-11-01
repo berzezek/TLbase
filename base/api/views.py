@@ -19,6 +19,12 @@ def category_list(request):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
+@api_view(['GET'])
+def category_list_by_parent_category(request, category_id=None):
+    if request.method == 'GET':
+        categories = Category.objects.filter(category=category_id)
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data)
 
 
 @api_view(['GET', 'PUT', 'POST', 'DELETE'])

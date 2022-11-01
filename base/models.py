@@ -2,13 +2,16 @@ from django.db import models
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Категория')
-    category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='subcategories', null=True, blank=True, verbose_name='Родительская категория')
+    name = models.CharField(max_length=50, verbose_name='Отдел')
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='subcategories', null=True,
+                                 blank=True, verbose_name='Головной отдел')
 
     class Meta:
-        verbose_name = 'Категорию'
-        verbose_name_plural = 'Категории'
+        verbose_name = 'Отдел'
+        verbose_name_plural = 'Отделы'
         ordering = ('id',)
+
+
     def __str__(self):
         return self.name
 
