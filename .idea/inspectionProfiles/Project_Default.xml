@@ -1,0 +1,28 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="2">
+            <item index="0" class="java.lang.String" itemvalue="djangorestframework-simplejwt" />
+            <item index="1" class="java.lang.String" itemvalue="Pillow" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyStatementEffectInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="tg_bot.misc.states.tg_bot" />
+          <option value="tg_bot.misc.states.Course" />
+          <option value="tg_bot.misc.states.Bot" />
+          <option value="tg_bot.misc.states.network" />
+          <option value="tg_bot.misc.states.*" />
+          <option value="loader.dp" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

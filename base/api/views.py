@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
 
 from .serializers import CategorySerializer, CategoryPostSerializer, EmployeeSerializer, EmployeePostSerializer
 from ..models import Category, Employee
@@ -58,9 +59,11 @@ def employee_list(request, category_id=None):
     except Category.DoesNotExist:
         return Response(status=404)
     if request.method == 'GET':
+        paginator = LimitOffsetPagination()
         employees = Employee.objects.filter(category=category)
-        serializer = EmployeeSerializer(employees, many=True)
-        return Response(serializer.data)
+        result_page = paginator.paginate_queryset(employees, request)
+        serializer = EmployeeSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
     elif request.method == 'POST':
         request.data['category'] = category_id

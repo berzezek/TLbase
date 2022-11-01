@@ -4,16 +4,16 @@ from rest_framework import serializers
 
 class CategorySerializer(serializers.ModelSerializer):
     subcategories = serializers.StringRelatedField(many=True)
+
     class Meta:
         model = Category
         fields = (
             'id',
             'name',
-            'category',
             'subcategories',
-            'is_has_subcategories'
         )
         read_only_fields = fields
+
 
 class CategoryPostSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,9 +30,9 @@ class CategoryPostSerializer(serializers.ModelSerializer):
         }
 
 
-
 class EmployeeSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField()
+
     class Meta:
         model = Employee
         fields = (
