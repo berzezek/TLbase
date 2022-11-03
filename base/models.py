@@ -1,9 +1,9 @@
 from django.db import models
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Отдел')
-    category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='subcategories', null=True,
+class Department(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Отдел')
+    head_office = models.ForeignKey('Department', on_delete=models.CASCADE, null=True,
                                  blank=True, verbose_name='Головной отдел')
 
     class Meta:
@@ -20,7 +20,7 @@ class Employee(models.Model):
     name = models.CharField(max_length=50)
     salary = models.IntegerField()
     date_of_issue = models.DateField()
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Сотрудника'

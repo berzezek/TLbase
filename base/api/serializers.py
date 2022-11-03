@@ -1,28 +1,25 @@
-from ..models import Category, Employee
+from ..models import Department, Employee
 from rest_framework import serializers
 
 
-class CategorySerializer(serializers.ModelSerializer):
-    subcategories = serializers.StringRelatedField(many=True)
-
+class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = Department
         fields = (
             'id',
             'name',
-            'subcategories',
-            'category',
+            'head_office',
         )
         read_only_fields = fields
 
 
-class CategoryPostSerializer(serializers.ModelSerializer):
+class DepartmentPostSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = Department
         fields = (
             'id',
             'name',
-            'category',
+            'head_office',
         )
         extra_kwargs = {
             'name': {
@@ -32,7 +29,7 @@ class CategoryPostSerializer(serializers.ModelSerializer):
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
-    category = serializers.StringRelatedField()
+    department = serializers.StringRelatedField()
 
     class Meta:
         model = Employee
@@ -41,7 +38,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
             'name',
             'salary',
             'date_of_issue',
-            'category',
+            'department',
         )
         read_only_fields = fields
 
@@ -54,7 +51,7 @@ class EmployeePostSerializer(serializers.ModelSerializer):
             'name',
             'salary',
             'date_of_issue',
-            'category',
+            'department',
         )
         extra_kwargs = {
             'name': {
@@ -66,7 +63,7 @@ class EmployeePostSerializer(serializers.ModelSerializer):
             'date_of_issue': {
                 'required': False
             },
-            'category': {
+            'department': {
                 'required': False
             }
         }
