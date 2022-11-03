@@ -2,9 +2,9 @@ from .views import category_list, category_list_by_parent_category, category_det
 from django.urls import path
 
 urlpatterns = [
-    path('category/', category_list),
-    path('category/<int:category_id>/', category_detail),
-    path('category-list/<int:category_id>/', category_list_by_parent_category),
-    path('category/<int:category_id>/employee/', employee_list),
+    path('department/', category_list),
+    path('department/<int:category_id>/', category_detail),
+    path('department-list/<int:category_id>/', category_list_by_parent_category),
+    path('department/<int:category_id>/employee/', employee_list),
     path('employee/<int:employee_id>/', employee_detail),
 ]
