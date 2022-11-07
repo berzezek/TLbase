@@ -42,3 +42,32 @@ class AdminTestPanel(TestCase):
             resp = client.get(page)
             assert resp.status_code == 200
             assert "<!DOCTYPE html" in resp.content.decode("utf-8")
+
+    def test_department(self):
+        self.create_user()
+        client = Client()
+        client.login(username=self.username, password=self.password)
+        resp_add = client.post("/admin/base/department/add/", {
+            "name": "test",
+        })
+        self.assertEqual(Department.objects.count(), 2)
+        resp_delete = client.post(f"/admin/base/department/{Department.objects.first().id}/delete/", {
+            "post": "yes",
+        })
+        self.assertEqual(Department.objects.count(), 1)
+        self.assertEqual(Department.objects.last().name, "test")
+        resp_add_division = client.post(f"/admin/base/department/add/?department={Department.objects.first().id}", {
+            "name": "test_division",
+            "head_office": Department.objects.first().id,
+        })
+        self.assertEqual(Department.objects.last().head_office, Department.objects.first())
+        self.assertEqual(Department.objects.count(), 2)
+        resp_edit = client.post(f"/admin/base/department/{Department.objects.first().id}/change/", {
+            "name": "test2",
+        })
+        self.assertEqual(resp_add.status_code, 302)
+        self.assertEqual(resp_delete.status_code, 302)
+        self.assertEqual(resp_edit.status_code, 302)
+        self.assertEqual(resp_add_division.status_code, 302)
+
+
