@@ -8,10 +8,10 @@ from .models import Department, Employee
 class DepartmentAdmin(admin.ModelAdmin):
     def parent_department(self, obj):
         parent_department = []
-        department = obj.department
+        department = obj.head_office
         while department is not None:
             parent_department.append(department)
-            department = department.department
+            department = department.head_office
         return f'{" -> ".join([c.name for c in parent_department[::-1]])}'
 
     list_display = (
@@ -76,7 +76,7 @@ class DepartmentAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         form.base_fields[ "name" ].label = "Наименование отдела:"
-        form.base_fields[ "department" ].label = "Головной отдел:"
+        form.base_fields[ "head_office" ].label = "Головной отдел:"
         return form
 
 @admin.register(Employee)
