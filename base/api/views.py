@@ -1,6 +1,7 @@
+from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.response import Response
 
 from .serializers import DepartmentSerializer, DepartmentPostSerializer, EmployeeSerializer, EmployeePostSerializer
 from ..models import Department, Employee
@@ -19,6 +20,8 @@ def department_list(request):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
+
+
 @api_view(['GET'])
 def department_list_by_parent_department(request, department_id=None):
     if request.method == 'GET':
@@ -32,30 +35,29 @@ def department_detail(request, department_id=None):
     try:
         department = Department.objects.get(pk=department_id)
     except Department.DoesNotExist:
-        return Response(status=404)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = DepartmentSerializer(department)
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        request.data['category'] = department_id
         serializer = DepartmentPostSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(head_office=department)
             return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'PUT':
         serializer = DepartmentPostSerializer(department, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
         department.delete()
-        return Response(status=204)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET', 'POST'])
@@ -63,7 +65,7 @@ def employee_list(request, department_id=None):
     try:
         department = Department.objects.get(id=department_id)
     except Department.DoesNotExist:
-        return Response(status=404)
+        return Response(status=status.HTTP_404_NOT_FOUND)
     if request.method == 'GET':
         paginator = LimitOffsetPagination()
         employees = Employee.objects.filter(department=department)
@@ -72,10 +74,9 @@ def employee_list(request, department_id=None):
         return paginator.get_paginated_response(serializer.data)
 
     elif request.method == 'POST':
-        request.data['head_office'] = department_id
         serializer = EmployeePostSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(department_id=department_id)
             return Response(serializer.data)
         return Response(serializer.errors)
 
@@ -84,9 +85,8 @@ def employee_list(request, department_id=None):
 def employee_detail(request, employee_id=None):
     try:
         employee = Employee.objects.get(pk=employee_id)
-        print(employee)
     except Employee.DoesNotExist:
-        return Response(status=404)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = EmployeeSerializer(employee)
@@ -97,8 +97,8 @@ def employee_detail(request, employee_id=None):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
         employee.delete()
-        return Response(status=204)
+        return Response(status=status.HTTP_204_NO_CONTENT)
