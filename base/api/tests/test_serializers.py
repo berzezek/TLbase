@@ -1,7 +1,7 @@
 from rest_framework.test import APIRequestFactory
 from rest_framework.test import APITestCase
-
 from base.api.views import department_list, department_list_by_parent_department
+
 
 class DepartmentListTestCase(APITestCase):
     def setUp(self):

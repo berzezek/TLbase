@@ -1,4 +1,4 @@
-from ..models import Department, Employee
+from base.models import Department, Employee
 from rest_framework import serializers
 
 

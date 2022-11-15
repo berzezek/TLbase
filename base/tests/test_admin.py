@@ -70,4 +70,3 @@ class AdminTestPanel(TestCase):
         self.assertEqual(resp_edit.status_code, 302)
         self.assertEqual(resp_add_division.status_code, 302)
 
-

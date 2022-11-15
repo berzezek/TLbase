@@ -1,11 +1,23 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.pagination import LimitOffsetPagination
+from rest_framework import pagination
 from rest_framework.response import Response
 
 from .serializers import DepartmentSerializer, DepartmentPostSerializer, EmployeeSerializer, EmployeePostSerializer
 from ..models import Department, Employee
 
+
+class CustomPagination(pagination.PageNumberPagination):
+    def get_paginated_response(self, data):
+        return Response({
+            'links': {
+                'next': self.get_next_link(),
+                'previous': self.get_previous_link()
+            },
+            'count': self.page.paginator.count,
+            'results': data,
+            'page_size': self.page_size,
+        })
 
 @api_view(['GET', 'POST'])
 def department_list(request):
@@ -67,7 +79,7 @@ def employee_list(request, department_id=None):
     except Department.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     if request.method == 'GET':
-        paginator = LimitOffsetPagination()
+        paginator = CustomPagination()
         employees = Employee.objects.filter(department=department)
         result_page = paginator.paginate_queryset(employees, request)
         serializer = EmployeeSerializer(result_page, many=True)

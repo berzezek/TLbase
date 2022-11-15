@@ -1,22 +1,27 @@
-def create_tl_base(department_depth_level = 5, department_count_for_each_head_office = 2, employee_count = 5):
-    from .models import Department, Employee
+from .models import Department, Employee
+from random import randint
+
+
+def create_tl_base(department_depth_level=5, max_division=3, employee_count=201):
     from faker import Faker
-    fake = Faker([ 'ru_RU' ])
-    # create departments and subdivisions
-    Department.objects.create(name=fake.bs(), head_office=None)
-    dep = Department.objects.all()
-    dep.save()
-    base_count = dep.count()
+    fake = Faker(['ru_RU'])
+    # create departments
+    base_dep_count = randint(1, max_division)
+    start = 0
+    stop = base_dep_count
+    for _ in range(base_dep_count):
+        Department.objects.create(name=fake.bs())
+
+    # create divisions
     for _ in range(department_depth_level):
+        dep = Department.objects.all()[start:stop]
         for i in dep:
-            for _ in range(department_count_for_each_head_office):
-                d = Department.objects.create(name=fake.bs(), head_office=i)
-                d.save()
-                dep = Department.objects.filter(head_office__isnull=False)
-                dep = dep[ base_count:base_count*department_count_for_each_head_office ]
-        base_count *= department_count_for_each_head_office
+            division_dep_count = randint(1, max_division)
+            start += division_dep_count
+            stop += division_dep_count
+            for _ in range(division_dep_count):
+                Department.objects.create(name=fake.bs(), head_office=i)
     # create employees
     for i in Department.objects.all():
         for _ in range(employee_count):
-            emp = Employee.objects.create(name=fake.name(), salary=fake.pyint() * 10, date_of_issue=fake.date(), department=i)
-            emp.save()
+            Employee.objects.create(name=fake.name(), salary=randint(5000, 50000), date_of_issue=fake.date(), department=i)
